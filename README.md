@@ -7,7 +7,7 @@
 This code library automates the process of producing an AI-generated summary of a video, and applies this process to generate summaries of 9,707 historical US presidential campaign TV ads.
 
 ###Workflow overview:
-[pipeline_graphic_cropped.pdf](https://github.com/user-attachments/files/17173603/pipeline_graphic_cropped.pdf)
+![pipeline_graphic_cropped_png](https://github.com/user-attachments/assets/eca5e354-531b-4652-b682-62e89c47e979)
 
 
 ###Parallelization
