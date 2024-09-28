@@ -11,7 +11,7 @@ This code library automates the process of producing an AI-generated summary of 
 ![pipeline_graphic_cropped_png](https://github.com/user-attachments/assets/eca5e354-531b-4652-b682-62e89c47e979)
 
 
-##Parallelization
+## Parallelization
 We design our codebase to accommodate even very large-scale applications (including those that are orders of magnitude larger than the project described here) by using the MPI parallelization standard via *openMPI*  and the *MPI4py* python module. Specifically, we note that the workflow described above is embarrassingly parallelizable at the level of videos.
 
 **NOTE:** New users should ensure that *openMPI* is installed on their machines, then install *mpi4py*. 
