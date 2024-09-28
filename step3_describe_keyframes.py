@@ -82,10 +82,8 @@ if __name__ == '__main__':
         inferred_end = manuallabel_subset_df['duration_inferred_incl_scene'].values[idx]  # These are now trimmed videos and we are including scene...
         vid_fpath = manuallabel_subset_df['vid_fpath_new'].values[idx]
 
-        if not pd.isnull(manuallabel_subset_df['LOCATION'].values[idx]):
-            vid_fpath = manuallabel_subset_df['LOCATION'].values[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
-        local_vid_fname = vid_fpath.split('/')[-1].split('.')[0]+'.mp4'
-        local_vid_fpath = 'pres_trimmed_incl_scene/' + vid_fpath
+        vid_fpath = metadata_df['FILENAME'].values[idx]
+        local_vid_fname = 'pres_trimmed_incl_scene/' + vid_fpath
 
         PARTY =  manuallabel_subset_df['PARTY'].values[idx] 
         ELECTION_YEAR = str( manuallabel_subset_df['ELECTION_YEAR'].values[idx] )

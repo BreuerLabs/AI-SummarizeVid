@@ -33,11 +33,8 @@ if __name__ == '__main__':
                 local_count, 'of', len(local_mastercsv_idx_split), 'in', proc_elapsed_min, 'min;', 
                 proc_elapsed_min * float(len(local_mastercsv_idx_split)-local_count)/float(local_count), 'mins remain')
 
-        vid_fpath = mastercsv_df['vid_fpath_new'].values[idx]
-        if not pd.isnull(mastercsv_df['LOCATION'].values[idx]):
-            vid_fpath = mastercsv_df['LOCATION'].values[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
-        local_vid_fname = vid_fpath.split('/')[-1].split('.')[0]+'.mp4'
-        local_vid_fpath = 'pres_trimmed_incl_scene/' + local_vid_fname
+        vid_fpath = metadata_df['FILENAME'].values[idx]
+        local_vid_fname = 'pres_trimmed_incl_scene/' + vid_fpath
 
         try:
             # Take frames at 3sec intervals until video end is reached:
