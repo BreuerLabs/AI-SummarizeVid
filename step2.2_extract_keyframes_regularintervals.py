@@ -11,7 +11,7 @@ from mpi4py import MPI
 This script saves a still frame at evenly time-spaced intervals from each ad video
 """
 
-MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-1-11_withWHISPERlargev3.csv'
+METADATA_FNAME = 'METADATA.csv'
 
 
 if __name__ == '__main__':
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     proc_time0 = datetime.now()
     local_errors = []
 
-    mastercsv_df = pd.read_csv(MASTERCSV_FNAME)
+    mastercsv_df = pd.read_csv(METADATA_FNAME)
 
     # Each processor gets a list of CSV row indices we want to process in parallel
     local_mastercsv_idx_split = np.array_split(list(range(len(mastercsv_df))), size)[rank] 

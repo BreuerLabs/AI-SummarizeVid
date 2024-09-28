@@ -3,31 +3,22 @@ from datetime import datetime
 import pandas as pd
 from mpi4py import MPI
 import subprocess
-import os
-from google.cloud import storage
 import whisper
 from whisper.utils import get_writer
 import glob
 
 
-' This script whisper-transcribes every local MP4 file that is not corrupted '
-
-
-MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-10-28.csv'
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "central-list-285600-46cc1356a36f.json" #ADAM FULL ACCESS 
-
-BUCKET = 'adamkosuke'
+"""
+This script whisper-transcribes videos in parallel.
+"""
 
 whispermodel = whisper.load_model("large-v3")
 
 vidfilepaths_local = glob.glob('pres_trimmed_incl_scene/*.mp4')
 filepaths_transcripts_local = glob.glob('pres_trimmed_inclscene_whisptrans_largev3_json/*.json')
 transcribed_videos_local = [x.split('/')[-1].split('.')[0] for x in filepaths_transcripts_local]
-
-
-print('local_video_count', len(vidfilepaths_local))
-print('local_transcripts_count', len(transcribed_videos_local))
+print('Local video count:', len(vidfilepaths_local))
+print('Local transcript count:', len(transcribed_videos_local))
 
 options = {
     'max_line_width': None,
@@ -77,7 +68,7 @@ if __name__ == '__main__':
     error_files = comm.gather(error_files_thisproc, root=0)
 
     if rank == 0:
-        print('\n\nerror_messages', error_messages)
-        print('\n\nerror_files', error_files)
+        print('\n\nerror messages:', error_messages)
+        print('\n\nerror files:', error_files)
 
 

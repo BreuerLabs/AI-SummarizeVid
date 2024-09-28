@@ -1,10 +1,9 @@
 import os
-#from openai import OpenAI
 os.environ["NUMEXPR_MAX_THREADS"]="272"
 
 import openai 
 import numpy as np
-import pandas as pd # only necessary to save csv of analyzed solution objective values
+import pandas as pd 
 from datetime import datetime, date
 from time import sleep
 import base64
@@ -13,19 +12,21 @@ import json
 
 from mpi4py import MPI
 
-# from openai import OpenAI
-# scp -r GPT_videoframesummaries_v6_manuallabelset_v3_regularspaced.py breuer@34.145.117.67:~/GPT_videoframesummaries_v6_manuallabelset_v3_regularspaced.py
+
+"""
+This script saves a still frame at evenly time-spaced intervals from each ad video
+"""
+
+MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"
+if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key":
+  raise Exception("Add your own OpenAI API key") 
+
+openai.api_key = MY_OPENAI_API_KEY
+METADATA_FNAME = 'METADATA.csv'
+
 
 
 def send_frame_to_gpt(this_ad_frame, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT):
-    #previous_frames_result_thisad_str = ' '.join(previous_frames_result_thisad_list)
-
-    # prompt = 'Describe what is depicted in this video frame in no more than 10 words. \
-    #             For context, this video frame is a still taken from an advertisement \
-    #             for the '+ ELECTION_YEAR +' presidential campaign of ' + PARTY +' ' + CANDIDATE +'. \
-    #             Before this video frame appears, the ad depicts the following:' + str(previous_frames_result_thisad_str) + \
-    #             ' The transcript of the entire ad is: ' + TRANSCRIPT #+ \
-    #             #' This frame was taken when the following line of the transcript is heard: ' + SEGMENT 
 
     prompt = 'Describe what is depicted in this video frame in no more than 15 words. Do not state that the frame depicts a vintage advertisement, and do not comment on the image quality. If the image includes text, then state that it includes text and also include a summary of the text that is shown. For context, this video frame is a still taken from an advertisement for the '+ ELECTION_YEAR +' presidential campaign of ' + PARTY +' ' + CANDIDATE +'. The transcript of the entire ad is:\n ' + TRANSCRIPT 
     if 'anti' in CANDIDATE:
@@ -48,20 +49,6 @@ def send_frame_to_gpt(this_ad_frame, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT
     return result.choices[0].message.content
 
 
-adam_API_key = "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"
-openai.api_key = adam_API_key
-# MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-10-28.csv'
-# MANUALLABELERCSV_FNAME = 'DONTSHARE_manual_check_introoutro_with_key_may10_final.csv'
-# manual_transc_fname  = 'transcriptions_manual_feb2_2024_v2.csv' #v2 means i sublime saved it as utf-8 bc they had weird chars
-# csv_fname = 'validation_DONTSHARE_manual_check_introoutro_with_key_may10_final_with_batch.csv'
-# whisper_directory = 'pres_trimmed_inclscene_whisptrans_largev3_json'
-# master_csv = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-1-11.csv'
-MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-1-11_withWHISPERlargev3.csv'
-
-DO_ONLY_MANUAL_VALIDATION_SET = True
-
-# # organization_id = org-G0G79DbBsTqqeOCIVO99uKJh
-
 
 if __name__ == '__main__':
     comm = MPI.COMM_WORLD
@@ -71,72 +58,18 @@ if __name__ == '__main__':
 
     sleep(rank*0.2) # Avoid rate limit issue that arises when all procs make first API query simultaneously.
 
+    metadata_df = pd.read_csv(METADATA_FNAME)
+    manuallabel_subset_df = metadata_df  # placeholder for subsetting
 
-    # mastercsv_df = pd.read_csv(MASTERCSV_FNAME)
-    # # whisper_files = glob.glob(whisper_directory)
-    # # manual_transc = pd.read_csv(manual_transc_fname, engine='python') #they have weird character encodings and this fixes it
-    # manual_transc = pd.read_csv(manual_transc_fname, encoding='utf-8') #they have weird character encodings and this fixes it
-    # manual_transc['have_manual_transcription'] = 1 #they have weird character encodings and this fixes it
-    # # csv = pd.read_csv(csv_fname)
-    # # print('len csv', len(csv), "len_manual_transc", len(manual_transc))
-    # joined = manual_transc.merge(mastercsv_df, how='outer', on='COMPONENT_ID')
-    # joined['have_manual_transcription'] = joined['have_manual_transcription'].fillna(0)
-
-    # print('len mastercsv', len(mastercsv_df), 'len joined', len(joined), "len_manual_transc", len(manual_transc))
-    # ghghgh
-    # # components_in_csv = joined['COMPONENT_ID'].values
-    # # components_in_manual = manual_transc['COMPONENT_ID'].values
-    # # id_in_csv_not_manual = set(components_in_csv).difference(set(components_in_manual))
-    # # id_in_manual_not_csv = set(components_in_manual).difference(set(components_in_csv))
-    # # print('id_in_manual_not_csv', id_in_manual_not_csv, 'len(id_in_manual_not_csv)', len(id_in_manual_not_csv))
-
-    # LOCATION = joined['LOCATION'].values
-    # for idx, vid_fpath in enumerate( joined['vid_fpath_new'].values ):
-    #     if not pd.isnull(LOCATION[idx]):
-    #         vid_fpath = LOCATION[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
-    #     vid_fname = vid_fpath.split('/')[-1].split('.')[0] 
-    #     whisper_vid_file = whisper_directory + '/' + vid_fname + '.json'
-    #     try:
-    #         with open(whisper_vid_file) as f:
-    #             whisper_json = json.load(f)
-    #             vid_transcript = whisper_json['text']
-    #             whisper_transcripts.append(vid_transcript)
-    #     except:
-    #         whisper_transcripts.append('')
-    #         print('Issues with '  + vid_fname + '.json')
-    #         errors.append(vid_fname)
-    # joined['whisper_largev3'] = whisper_transcripts
-    # joined_keepcols = joined[ list(manual_transc.columns) + ['whisper_largev3'] + ['LOCATION', 'vid_fpath_new'] ]
-    # joined_keepcols.to_csv('manual_transc_fname_withwhisperlargev3_inner_cols.csv', index=False)
-    # print('errors\n', errors)
-
-
-
-
-
-    mastercsv_df = pd.read_csv(MASTERCSV_FNAME)
-    # manuallabel_subset_df = mastercsv_df.loc[mastercsv_df['have_manual_transcription']==1]
-    manuallabel_subset_df = mastercsv_df  # placeholder for subsetting
-
-
-    # manuallabelcsv_df = pd.read_csv(MANUALLABELERCSV_FNAME)
-    # already_donebyGPT_frames = glob.glob('GPT_frame_descriptions/*.txt')
-    # tot_num_frames_to_do = len(glob.glob('pres_trimmed_inclscene_whisper_segment_centerframes_largev3/*'))
     already_donebyGPT_frames = glob.glob('GPT_frame_descriptions_regularspaced/*.txt')
     tot_num_frames_to_do = len(glob.glob('pres_trimmed_inclscene_whisper_segment_centerframes_regularspaced/*'))
     num_frames_left_to_do = tot_num_frames_to_do - len(already_donebyGPT_frames)
 
     # Parallel split here
-    # for idx in list(range(len(mastercsv_df))):
     proc_time0 = datetime.now()
-
-    # local_mastercsv_idx_split = np.array_split(list(range(len(mastercsv_df))), size)[rank]
-    # local_mastercsv_idx_split = np.array_split(list(range(len(manuallabel_subset_df))), size)[rank]  # Each proc gets a list of CSV row indices we want to process
     indices = list(range(len(manuallabel_subset_df)))
     np.random.shuffle(indices) # randomly reshuffle these to better load balance across processors
     local_mastercsv_idx_split = np.array_split(indices, size)[rank]  # Each proc gets a list of CSV row indices we want to process
-
-
 
     totcount_of_frames_processed_thisproc = 0
     already_done = 0
@@ -146,10 +79,8 @@ if __name__ == '__main__':
             print('\nrank', rank, 'starting CSV row', idx, 'which is local workload', local_count, 'of', len(local_mastercsv_idx_split), 'in', proc_elapsed_min, 'min;', 
                     proc_elapsed_min * float(len(local_mastercsv_idx_split)-local_count)/float(local_count), 'mins remain')
 
-        #previous_frames_result_thisad_list = []
         inferred_end = manuallabel_subset_df['duration_inferred_incl_scene'].values[idx]  # These are now trimmed videos and we are including scene...
         vid_fpath = manuallabel_subset_df['vid_fpath_new'].values[idx]
-
 
         if not pd.isnull(manuallabel_subset_df['LOCATION'].values[idx]):
             vid_fpath = manuallabel_subset_df['LOCATION'].values[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
@@ -164,14 +95,6 @@ if __name__ == '__main__':
         CANDIDATE = firstname + ' ' + lastname
         TRANSCRIPT = manuallabel_subset_df['whisper_largev3'].values[idx]
 
-        # print('CANDIDATE', CANDIDATE)
-        # print('TRANSCRIPT', TRANSCRIPT)
-        # print('ELECTION_YEAR', ELECTION_YEAR)
-        # print('local_vid_fpath', local_vid_fpath)
-        
-        # with open( 'pres_trimmed_inclscene_whisptrans_largev3_json/' + vid_fpath.split('/')[-1].split('.')[0]+'.json' ) as f:
-        #     d = json.load(f)
-        #     TRANSCRIPT = d['text']
         if pd.isnull(TRANSCRIPT):
             TRANSCRIPT = 'null, as no words are spoken in the ad'
 
@@ -188,18 +111,14 @@ if __name__ == '__main__':
             try:
                 time0 = datetime.now()
                 result = send_frame_to_gpt(this_ad_frame_encoded, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT)
-                # print(result)
+
                 with open('GPT_frame_descriptions_regularspaced/'+this_frame_fpath.split('/')[-1] + '.txt', 'w') as outfile:
                     outfile.write(result)
                 print(this_frame_fpath, result, (datetime.now() - time0).total_seconds(), 'local workload ', local_count, 'of', len(local_mastercsv_idx_split))
                 SUCCESS = True
                 
-
-
             except Exception as e:
                 print('\nError on', this_frame_fpath.split('/')[-1], e)
-                # print('result', result)
-
 
     print('rank', rank, 'attempted to describe a total of', totcount_of_frames_processed_thisproc, 'video stills. already done OF THESE=', already_done)
 

@@ -7,12 +7,16 @@ import pandas as pd
 from datetime import datetime, date
 from time import sleep
 import glob
-
 from mpi4py import MPI
 
+"""
+This script summarizes videos in parallel.
+"""
 
 
-MY_OPENAI_API_KEY = "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"
+MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"
+if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key":
+  raise Exception("Add your own OpenAI API key") 
 
 
 
@@ -43,7 +47,7 @@ def gpt_summarize_ad(ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT, FRAMETIMES, FR
 
 openai.api_key = MY_OPENAI_API_KEY
 
-MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-1-11_withWHISPERlargev3.csv'
+METADATA_FNAME = 'METADATA.csv'
 
 already_summarized_videos = glob.glob('GPT_adcontent_descriptions_segplusregspaced/*.txt')
 
@@ -54,8 +58,8 @@ if __name__ == '__main__':
     size = comm.Get_size()
     print(rank, size)
 
-    mastercsv_df = pd.read_csv(MASTERCSV_FNAME)
-    manuallabel_subset_df = mastercsv_df  # placeholder for subsetting
+    metadata_df = pd.read_csv(METADATA_FNAME)
+    manuallabel_subset_df = metadata_df  # placeholder for subsetting
 
     proc_time0 = datetime.now()
     already_done = 0

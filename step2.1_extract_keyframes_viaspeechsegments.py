@@ -7,30 +7,35 @@ import glob
 import cv2
 
 
+
 """
 This script saves a frame from the middle instant of each segment of whisper-transcribed text
 for each ad video in the master CSV (parallelized across videos)
 """
 
+## NOTE: This script requires ffmpeg
 
-MASTERCSV_FNAME = 'MASTER_CSV_01252023_based12062022_WITH_INFERRED_INTROOUTRO_V5_2023-10-28.csv'
+
+METADATA_FNAME = 'METADATA.csv'
+
 
 filepaths_transcripts_local = glob.glob('pres_trimmed_inclscene_whisptrans_largev3_json/*.json')
 transcribed_videos_local = [x.split('/')[-1].split('.')[0] for x in filepaths_transcripts_local]
+
 
 if __name__ == '__main__':
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
     vid_count = 0
-    mastercsv_df = pd.read_csv(MASTERCSV_FNAME)
+    metadata_df = pd.read_csv(METADATA_FNAME)
 
     # Each processor gets a list of CSV row indices we want to process in parallel
-    for idx in np.array_split(list(range(len(mastercsv_df))), size)[rank]:
+    for idx in np.array_split(list(range(len(metadata_df))), size)[rank]:
         
-        vid_fpath = mastercsv_df['vid_fpath_new'].values[idx]
-        if not pd.isnull(mastercsv_df['LOCATION'].values[idx]):
-            vid_fpath = mastercsv_df['LOCATION'].values[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
+        vid_fpath = metadata_df['vid_fpath_new'].values[idx]
+        if not pd.isnull(metadata_df['LOCATION'].values[idx]):
+            vid_fpath = metadata_df['LOCATION'].values[idx] # for some videos we need to use old file because new one is corrupted, and some are also in the missing folder bc they forgot.
 
         local_vid_fname = 'pres_trimmed_incl_scene/' + vid_fpath.split('/')[-1].split('.')[0]+'.mp4'
 
@@ -48,7 +53,7 @@ if __name__ == '__main__':
                 continue
 
             for fidx, frame_sample_time in enumerate(segment_middles):
-                if (frame_sample_time > mastercsv_df['duration_inferred_incl_scene'].values[idx]*1000.):
+                if (frame_sample_time > metadata_df['duration_inferred_incl_scene'].values[idx]*1000.):
                     continue
                 
                 image_output_fpath = 'pres_trimmed_inclscene_whisper_segment_centerframes_largev3/' + str(vid_fpath.split('/')[-1].split('.')[0]) + "_" + str(frame_sample_time) + ".jpg"
