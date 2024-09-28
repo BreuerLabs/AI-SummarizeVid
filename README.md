@@ -28,11 +28,13 @@ We conduct automated transcription and transcript segmentation using the largest
 
 Transcription with Whisper returns two outputs: the video transcripts, and the segmentation of the transcript into short phrases that are separated by a natural pause in the speaker's voice (or a change in the person speaking).
 
-### Step 2: Video key frame extraction
+### Step 2: Video key frame extraction (requires local installation of *ffmpeg*)
 
 Our second task is to extract an ordered set of keyframes (i.e. images of video frames) from each video that are *comprehensive* in terms of reflecting each video's visual contents and progression of imagery. More specifically, we seek a time-ordered set of frames that contains all of the important visual contents of the ad. 
 
 We accomplish this via two complementary strategies. First, we determine when important images are shown according to its narrator or speaker, per the transcription segments detected in **Step 1** above. Specifically, for each video, we extract a frame corresponding to the central moment of each speech segment. Second, we also extract a `transcription-agnostic' set of video frames at regular $3$-second intervals. We then merge this set with the transcription-directed video frames described above.
+
+This step requires a local installation of *ffmpeg*, which is called via Python. We find this approach to be significantly faster and more robust than Python-native alternatives.
 
 ### Step 3: Obtaining video key frame descriptions
 
