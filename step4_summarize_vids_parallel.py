@@ -16,7 +16,7 @@ This script summarizes videos in parallel.
 
 MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"
 if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key":
-  raise Exception("Add your own OpenAI API key") 
+  raise Exception("Error: Add your own OpenAI API key to the script!") 
 
 
 
@@ -49,7 +49,6 @@ openai.api_key = MY_OPENAI_API_KEY
 
 METADATA_FNAME = 'METADATA.csv'
 
-already_summarized_videos = glob.glob('GPT_adcontent_descriptions_segplusregspaced/*.txt')
 
 
 if __name__ == '__main__':
@@ -57,6 +56,13 @@ if __name__ == '__main__':
     rank = comm.Get_rank()
     size = comm.Get_size()
     print(rank, size)
+
+    # Create keyframe storage directory if they don't already exist:
+    if rank == 0:
+        if not os.path.exists("GPT_video_summaries"): 
+            os.makedirs("GPT_video_summaries") 
+
+    already_summarized_videos = glob.glob('GPT_video_summaries/*.txt')
 
     metadata_df = pd.read_csv(METADATA_FNAME)
     manuallabel_subset_df = metadata_df  # placeholder for subsetting
@@ -80,10 +86,10 @@ if __name__ == '__main__':
                 proc_elapsed_min * float(len(local_mastercsv_idx_split)-local_count)/float(local_count), 'mins remain')
 
         #previous_frames_result_thisad_list = []
-        vid_fpath = metadata_df['FILENAME'].values[idx]
-        local_vid_fname = 'pres_trimmed_incl_scene/' + vid_fpath
-        
-        if 'GPT_adcontent_descriptions_segplusregspaced/'+local_vid_fname + '.txt' in already_summarized_videos:
+        vid_fname = metadata_df['FILENAME'].values[idx]
+        local_vid_fpath = 'pres_ad_videos/' + vid_fname
+
+        if 'GPT_video_summaries/'+local_vid_fpath + '.txt' in already_summarized_videos:
             already_done += 1
             continue
 
@@ -94,14 +100,16 @@ if __name__ == '__main__':
         lastname = manuallabel_subset_df['LAST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['LAST_NAME'].values[idx]) else ''
         firstname = manuallabel_subset_df['FIRST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['FIRST_NAME'].values[idx]) else ''
         CANDIDATE = firstname + ' ' + lastname
-        TRANSCRIPT = manuallabel_subset_df['whisper_largev3'].values[idx]
+
+        with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
+            TRANSCRIPT = text_file.read()
 
         if pd.isnull(TRANSCRIPT):
             TRANSCRIPT = 'null, as no words are spoken in the ad'
 
         FRAMETIMES_SEGMENTS = []
         FRAMEDESCRIPTIONS_SEGMENTS = []
-        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions/'+local_vid_fname.split('.')[0] + '*'):
+        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_speechcentered/'+vid_fname.split('.')[0] + '*'):
             frametime = float( this_framedescription_fpath.split('_')[-1].split('.')[0] )
             FRAMETIMES_SEGMENTS.append(frametime)
             with open(this_framedescription_fpath, 'r') as tmp:
@@ -110,7 +118,7 @@ if __name__ == '__main__':
 
         FRAMETIMES_REGSPACED = []
         FRAMEDESCRIPTIONS_REGSPACED = []
-        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_regularspaced/'+local_vid_fname.split('.')[0] + '*'):
+        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_regintervals/'+vid_fname.split('.')[0] + '*'):
             frametime = float( this_framedescription_fpath.split('_')[-1].split('.')[0] )
             FRAMETIMES_REGSPACED.append(frametime)
             with open(this_framedescription_fpath, 'r') as tmp:
@@ -128,15 +136,15 @@ if __name__ == '__main__':
             if not len(result):
                 raise Exception("Empty result from OpenAI!") 
 
-            with open('GPT_adcontent_descriptions_segplusregspaced/'+local_vid_fname + '.txt', 'w') as outfile:
+            with open('GPT_video_summaries/'+vid_fname + '.txt', 'w') as outfile:
                 outfile.write(result)
-            print('RESULT:\n', local_vid_fname, result, 
+            print('RESULT:\n', vid_fname, result, 
                 'GPT Response time (sec):', (datetime.now() - time0).total_seconds())
             SUCCESS = True
             pass
 
         except Exception as e:
-            print('\nError on', local_vid_fpath.split('/')[-1], e)
+            print('\nError on', vid_fname, e)
             local_errors.append(e, rank, local_vid_fpath)
             pass
 

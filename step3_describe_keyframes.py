@@ -25,6 +25,17 @@ openai.api_key = MY_OPENAI_API_KEY
 METADATA_FNAME = 'METADATA.csv'
 
 
+# APPLY WORKFLOW TO PROCESS SPEECH SEGMENT KEYFRAMES OR REGULAR INTERVAL KEYFRAMES?
+DIRECTORY_SUFFIX = 'speechcentered'
+# DIRECTORY_SUFFIX = 'regintervals'
+
+print('Working on', DIRECTORY_SUFFIX, 'keyframes. Change this in the script to switch speech-centered or reg. intervals')
+
+input_directory = 'keyframes_'+DIRECTORY_SUFFIX
+output_directory = 'GPT_frame_descriptions_'+DIRECTORY_SUFFIX
+# GPT_frame_descriptions_speechcentered
+# GPT_frame_descriptions_regintervals
+
 
 def send_frame_to_gpt(this_ad_frame, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT):
 
@@ -56,18 +67,22 @@ if __name__ == '__main__':
     size = comm.Get_size()
     print(rank, size)
 
+    # Initialize output storage directory if it doesn't exist
+    if rank == 0:
+        if not os.path.exists(output_directory): 
+            os.makedirs(output_directory) 
+
     sleep(rank*0.2) # Avoid rate limit issue that arises when all procs make first API query simultaneously.
 
     metadata_df = pd.read_csv(METADATA_FNAME)
-    manuallabel_subset_df = metadata_df  # placeholder for subsetting
 
-    already_donebyGPT_frames = glob.glob('GPT_frame_descriptions_regularspaced/*.txt')
-    tot_num_frames_to_do = len(glob.glob('pres_trimmed_inclscene_whisper_segment_centerframes_regularspaced/*'))
+    already_donebyGPT_frames = glob.glob(output_directory+'/*.txt')
+    tot_num_frames_to_do = len(glob.glob(input_directory+'/*'))
     num_frames_left_to_do = tot_num_frames_to_do - len(already_donebyGPT_frames)
 
     # Parallel split here
     proc_time0 = datetime.now()
-    indices = list(range(len(manuallabel_subset_df)))
+    indices = list(range(len(metadata_df)))
     np.random.shuffle(indices) # randomly reshuffle these to better load balance across processors
     local_mastercsv_idx_split = np.array_split(indices, size)[rank]  # Each proc gets a list of CSV row indices we want to process
 
@@ -79,27 +94,28 @@ if __name__ == '__main__':
             print('\nrank', rank, 'starting CSV row', idx, 'which is local workload', local_count, 'of', len(local_mastercsv_idx_split), 'in', proc_elapsed_min, 'min;', 
                     proc_elapsed_min * float(len(local_mastercsv_idx_split)-local_count)/float(local_count), 'mins remain')
 
-        inferred_end = manuallabel_subset_df['duration_inferred_incl_scene'].values[idx]  # These are now trimmed videos and we are including scene...
-        vid_fpath = manuallabel_subset_df['vid_fpath_new'].values[idx]
+        inferred_end = metadata_df['DURATION'].values[idx]  # These are now trimmed videos and we are including scene...
 
-        vid_fpath = metadata_df['FILENAME'].values[idx]
-        local_vid_fname = 'pres_trimmed_incl_scene/' + vid_fpath
+        vid_fname = metadata_df['FILENAME'].values[idx]
+        local_vid_fpath = 'pres_ad_videos/' + vid_fname
 
-        PARTY =  manuallabel_subset_df['PARTY'].values[idx] 
-        ELECTION_YEAR = str( manuallabel_subset_df['ELECTION_YEAR'].values[idx] )
-        print("manuallabel_subset_df['FIRST_NAME'].values[idx]", manuallabel_subset_df['FIRST_NAME'].values[idx], "manuallabel_subset_df['LAST_NAME'].values[idx]", manuallabel_subset_df['LAST_NAME'].values[idx])
-        lastname = manuallabel_subset_df['LAST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['LAST_NAME'].values[idx]) else ''
-        firstname = manuallabel_subset_df['FIRST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['FIRST_NAME'].values[idx]) else ''
+        PARTY =  metadata_df['PARTY'].values[idx] 
+        ELECTION_YEAR = str( metadata_df['ELECTION'].values[idx] )
+        print("metadata_df['FIRST_NAME'].values[idx]", metadata_df['FIRST_NAME'].values[idx], "metadata_df['LAST_NAME'].values[idx]", metadata_df['LAST_NAME'].values[idx])
+        lastname = metadata_df['LAST_NAME'].values[idx] if not pd.isnull(metadata_df['LAST_NAME'].values[idx]) else ''
+        firstname = metadata_df['FIRST_NAME'].values[idx] if not pd.isnull(metadata_df['FIRST_NAME'].values[idx]) else ''
         CANDIDATE = firstname + ' ' + lastname
-        TRANSCRIPT = manuallabel_subset_df['whisper_largev3'].values[idx]
+
+        with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
+            TRANSCRIPT = text_file.read()
 
         if pd.isnull(TRANSCRIPT):
             TRANSCRIPT = 'null, as no words are spoken in the ad'
 
-        for this_frame_fpath in glob.glob('pres_trimmed_inclscene_whisper_segment_centerframes_regularspaced/'+local_vid_fname.split('.')[0] + '*'):
+        for this_frame_fpath in glob.glob(input_directory+'/'+vid_fname.split('.')[0] + '*'):
             totcount_of_frames_processed_thisproc += 1
 
-            if 'GPT_frame_descriptions_regularspaced/'+this_frame_fpath.split('/')[-1]+'.txt' in already_donebyGPT_frames:
+            if output_directory'/'+this_frame_fpath.split('/')[-1]+'.txt' in already_donebyGPT_frames:
                 already_done +=1
                 continue
 
@@ -110,15 +126,17 @@ if __name__ == '__main__':
                 time0 = datetime.now()
                 result = send_frame_to_gpt(this_ad_frame_encoded, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT)
 
-                with open('GPT_frame_descriptions_regularspaced/'+this_frame_fpath.split('/')[-1] + '.txt', 'w') as outfile:
+                with open(output_directory'/'+this_frame_fpath.split('/')[-1] + '.txt', 'w') as outfile:
                     outfile.write(result)
-                print(this_frame_fpath, result, (datetime.now() - time0).total_seconds(), 'local workload ', local_count, 'of', len(local_mastercsv_idx_split))
+                print(this_frame_fpath, result, (datetime.now() - time0).total_seconds(), 
+                    'local workload ', local_count, 'of', len(local_mastercsv_idx_split))
                 SUCCESS = True
                 
             except Exception as e:
                 print('\nError on', this_frame_fpath.split('/')[-1], e)
 
-    print('rank', rank, 'attempted to describe a total of', totcount_of_frames_processed_thisproc, 'video stills. already done OF THESE=', already_done)
+    print('rank', rank, 'attempted to describe a total of', 
+        totcount_of_frames_processed_thisproc, 'video stills. already done OF THESE=', already_done)
 
 
 
