@@ -13,7 +13,7 @@ import os # create output storage directories
 This script whisper-transcribes videos in parallel.
 """
 
-## NOTE: ad videos should be stored in directory called "pres_ad_videos"
+## NOTE: ad videos should be stored in directory called "PRES_AD_VIDEOS"
 
 whispermodel = whisper.load_model("large-v3")
 
@@ -33,8 +33,8 @@ if __name__ == '__main__':
     vid_count = 0
 
     if rank == 0:  # Root processor does bookkeeping
-        if not os.path.exists("pres_ad_videos"): 
-            raise Exception("Error: Videos should be stored in directory 'pres_ad_videos'")
+        if not os.path.exists("PRES_AD_VIDEOS"): 
+            raise Exception("Error: Videos should be stored in directory 'PRES_AD_VIDEOS'")
         # Create transcript storage directories if they don't already exist:
         if not os.path.exists("pres_ad_whisptranscripts_json"): 
             os.makedirs("pres_ad_whisptranscripts_json") 
@@ -44,20 +44,20 @@ if __name__ == '__main__':
             os.makedirs("pres_ad_whisptranscripts_txt") 
 
 
-    vidfilepaths_local = glob.glob('pres_ad_videos/*.mp4')
+    vidfilepaths_local = glob.glob('PRES_AD_VIDEOS/*.mp4')
     filepaths_transcripts_local = glob.glob('pres_ad_whisptranscripts_json/*.json')
     transcribed_videos_local = [x.split('/')[-1].split('.')[0] for x in filepaths_transcripts_local]
     if rank == 0:
         print('Local video count:', len(vidfilepaths_local))
         print('Local transcript count:', len(transcribed_videos_local))
 
-    all_vid_fpaths = [vid_fpath.split('/')[-1].split('.')[0] for vid_fpath in vidfilepaths_local]
+    all_vid_fpaths = [vid_fpath.split('/')[-1] for vid_fpath in vidfilepaths_local]
     all_vid_fpaths_LEFTTODO = list(set(all_vid_fpaths).difference(transcribed_videos_local))
 
     this_proc_left_to_do = np.array_split(all_vid_fpaths_LEFTTODO, size)[rank]
  
     for idx, vid_fpath_id in enumerate( this_proc_left_to_do ): 
-        vid_fpath = 'pres_ad_videos/' + vid_fpath_id + '.mp4'
+        vid_fpath = 'PRES_AD_VIDEOS/' + vid_fpath_id 
 
         transcription = whispermodel.transcribe(vid_fpath, fp16=False)
         with open('pres_ad_whisptranscripts_txt/' + vid_fpath_id +'.txt', "w") as text_file:

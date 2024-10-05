@@ -9,6 +9,8 @@ from time import sleep
 import base64
 import glob
 import json
+import os
+from time import sleep
 
 from mpi4py import MPI
 
@@ -17,19 +19,17 @@ from mpi4py import MPI
 This script saves a still frame at evenly time-spaced intervals from each ad video
 """
 
-MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"
-if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key":
-  raise Exception("Add your own OpenAI API key") 
+MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"  # REPLACE THIS LINE WITH YOUR OpenAPI Key
+
+# APPLY WORKFLOW TO PROCESS SPEECH SEGMENT KEYFRAMES OR REGULAR INTERVAL KEYFRAMES?
+# DIRECTORY_SUFFIX = 'speechcentered'
+DIRECTORY_SUFFIX = 'regintervals'
+
+
+
 
 openai.api_key = MY_OPENAI_API_KEY
 METADATA_FNAME = 'METADATA.csv'
-
-
-# APPLY WORKFLOW TO PROCESS SPEECH SEGMENT KEYFRAMES OR REGULAR INTERVAL KEYFRAMES?
-DIRECTORY_SUFFIX = 'speechcentered'
-# DIRECTORY_SUFFIX = 'regintervals'
-
-print('Working on', DIRECTORY_SUFFIX, 'keyframes. Change this in the script to switch speech-centered or reg. intervals')
 
 input_directory = 'keyframes_'+DIRECTORY_SUFFIX
 output_directory = 'GPT_frame_descriptions_'+DIRECTORY_SUFFIX
@@ -67,6 +67,12 @@ if __name__ == '__main__':
     size = comm.Get_size()
     print(rank, size)
 
+    print('\n\nWorking on', DIRECTORY_SUFFIX, 'keyframes. CHANGE THIS IN THE SCRIPT to switch speech-centered or reg. intervals\n\n')
+    sleep(3)
+
+    if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key": # LEAVE THIS ALONE (it just checks that you actually replaced the line above!)
+      raise Exception("Add your own OpenAI API key") 
+
     # Initialize output storage directory if it doesn't exist
     if rank == 0:
         if not os.path.exists(output_directory): 
@@ -88,6 +94,8 @@ if __name__ == '__main__':
 
     totcount_of_frames_processed_thisproc = 0
     already_done = 0
+    errors_thisprocessor = [] # storage for any errors
+
     for local_count, idx in enumerate(local_mastercsv_idx_split):
         if local_count>1:
             proc_elapsed_min = (datetime.now()-proc_time0).total_seconds()/60.
@@ -97,46 +105,50 @@ if __name__ == '__main__':
         inferred_end = metadata_df['DURATION'].values[idx]  # These are now trimmed videos and we are including scene...
 
         vid_fname = metadata_df['FILENAME'].values[idx]
-        local_vid_fpath = 'pres_ad_videos/' + vid_fname
+        local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
         PARTY =  metadata_df['PARTY'].values[idx] 
         ELECTION_YEAR = str( metadata_df['ELECTION'].values[idx] )
-        print("metadata_df['FIRST_NAME'].values[idx]", metadata_df['FIRST_NAME'].values[idx], "metadata_df['LAST_NAME'].values[idx]", metadata_df['LAST_NAME'].values[idx])
+        # print("metadata_df['FIRST_NAME'].values[idx]", metadata_df['FIRST_NAME'].values[idx], "metadata_df['LAST_NAME'].values[idx]", metadata_df['LAST_NAME'].values[idx])
         lastname = metadata_df['LAST_NAME'].values[idx] if not pd.isnull(metadata_df['LAST_NAME'].values[idx]) else ''
         firstname = metadata_df['FIRST_NAME'].values[idx] if not pd.isnull(metadata_df['FIRST_NAME'].values[idx]) else ''
         CANDIDATE = firstname + ' ' + lastname
 
-        with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
-            TRANSCRIPT = text_file.read()
 
-        if pd.isnull(TRANSCRIPT):
-            TRANSCRIPT = 'null, as no words are spoken in the ad'
+        try:  # Handle openAPI errors and also handle case where you are only computing on subset of videos
 
-        for this_frame_fpath in glob.glob(input_directory+'/'+vid_fname.split('.')[0] + '*'):
-            totcount_of_frames_processed_thisproc += 1
+            with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
+                TRANSCRIPT = text_file.read()
 
-            if output_directory'/'+this_frame_fpath.split('/')[-1]+'.txt' in already_donebyGPT_frames:
-                already_done +=1
-                continue
+                if pd.isnull(TRANSCRIPT):
+                    TRANSCRIPT = 'null, as no words are spoken in the ad'
 
-            with open(this_frame_fpath, "rb") as tmp:
-                this_ad_frame_encoded = base64.b64encode(tmp.read()).decode("utf-8")
+            for this_frame_fpath in glob.glob(input_directory+'/'+vid_fname.split('.')[0] + '*'):
+                totcount_of_frames_processed_thisproc += 1
 
-            try:
+                if output_directory+'/'+this_frame_fpath.split('/')[-1]+'.txt' in already_donebyGPT_frames:
+                    already_done +=1
+                    continue
+
+                with open(this_frame_fpath, "rb") as tmp:
+                    this_ad_frame_encoded = base64.b64encode(tmp.read()).decode("utf-8")
+
                 time0 = datetime.now()
                 result = send_frame_to_gpt(this_ad_frame_encoded, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT)
 
-                with open(output_directory'/'+this_frame_fpath.split('/')[-1] + '.txt', 'w') as outfile:
+                with open(output_directory+'/'+this_frame_fpath.split('/')[-1] + '.txt', 'w') as outfile:
                     outfile.write(result)
                 print(this_frame_fpath, result, (datetime.now() - time0).total_seconds(), 
                     'local workload ', local_count, 'of', len(local_mastercsv_idx_split))
                 SUCCESS = True
-                
-            except Exception as e:
-                print('\nError on', this_frame_fpath.split('/')[-1], e)
+                    
+        except Exception as e:
+            print('\nError on', vid_fname, e)
+            errors_thisprocessor.append({vid_fname: e})
 
     print('rank', rank, 'attempted to describe a total of', 
         totcount_of_frames_processed_thisproc, 'video stills. already done OF THESE=', already_done)
+
 
 
 

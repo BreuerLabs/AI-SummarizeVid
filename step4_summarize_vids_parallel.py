@@ -15,8 +15,7 @@ This script summarizes videos in parallel.
 
 
 MY_OPENAI_API_KEY = "Replace-With-Your-API-Key"
-if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key":
-  raise Exception("Error: Add your own OpenAI API key to the script!") 
+
 
 
 
@@ -57,6 +56,9 @@ if __name__ == '__main__':
     size = comm.Get_size()
     print(rank, size)
 
+    if MY_OPENAI_API_KEY == "Replace-With-Your-API-Key": # LEAVE THIS ALONE (it just checks that you actually replaced the line above!)
+      raise Exception("Add your own OpenAI API key") 
+
     # Create keyframe storage directory if they don't already exist:
     if rank == 0:
         if not os.path.exists("GPT_video_summaries"): 
@@ -78,6 +80,7 @@ if __name__ == '__main__':
 
     totcount_of_frames_processed_thisproc = 0
     already_done = 0
+    errors_thisprocessor = [] # storage
     for local_count, idx in enumerate(local_mastercsv_idx_split):
         if local_count>1:
             proc_elapsed_min = (datetime.now()-proc_time0).total_seconds()/60.
@@ -87,7 +90,7 @@ if __name__ == '__main__':
 
         #previous_frames_result_thisad_list = []
         vid_fname = metadata_df['FILENAME'].values[idx]
-        local_vid_fpath = 'pres_ad_videos/' + vid_fname
+        local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
         if 'GPT_video_summaries/'+local_vid_fpath + '.txt' in already_summarized_videos:
             already_done += 1
@@ -95,17 +98,24 @@ if __name__ == '__main__':
 
 
         PARTY =  manuallabel_subset_df['PARTY'].values[idx] 
-        ELECTION_YEAR = str( manuallabel_subset_df['ELECTION_YEAR'].values[idx] )
+        ELECTION_YEAR = str( manuallabel_subset_df['ELECTION'].values[idx] )
 
         lastname = manuallabel_subset_df['LAST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['LAST_NAME'].values[idx]) else ''
         firstname = manuallabel_subset_df['FIRST_NAME'].values[idx] if not pd.isnull(manuallabel_subset_df['FIRST_NAME'].values[idx]) else ''
         CANDIDATE = firstname + ' ' + lastname
 
-        with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
-            TRANSCRIPT = text_file.read()
+        try:
+            with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
+                TRANSCRIPT = text_file.read()
 
-        if pd.isnull(TRANSCRIPT):
-            TRANSCRIPT = 'null, as no words are spoken in the ad'
+            if pd.isnull(TRANSCRIPT):
+                TRANSCRIPT = 'null, as no words are spoken in the ad'
+
+        except Exception as e:
+            print('\nError on', vid_fname, e)
+            errors_thisprocessor.append({vid_fname: e})
+            continue # skip this video and continue
+
 
         FRAMETIMES_SEGMENTS = []
         FRAMEDESCRIPTIONS_SEGMENTS = []

@@ -4,7 +4,6 @@ from mpi4py import MPI
 import subprocess
 import os
 import glob
-import cv2
 
 
 
@@ -14,7 +13,7 @@ for each ad video in the master CSV (parallelized across videos)
 """
 
 ## NOTE: This script requires ffmpeg for frame extraction
-## NOTE: We assume videos are stored in pres_ad_videos/ and transcripts are stored as in step1 script
+## NOTE: We assume videos are stored in PRES_AD_VIDEOS/ and transcripts are stored as in step1 script
 
 
 METADATA_FNAME = 'METADATA.csv'
@@ -40,10 +39,10 @@ if __name__ == '__main__':
     for idx in np.array_split(list(range(len(metadata_df))), size)[rank]:
         
         vid_fname = metadata_df['FILENAME'].values[idx]
-        local_vid_fpath = 'pres_ad_videos/' + vid_fname
+        local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
         try:
-            tsv = pd.read_csv('pres_ad_whisptranscripts_tsv/' + vid_fname.split('.')[0]+'.tsv', sep='\t')
+            tsv = pd.read_csv('pres_ad_whisptranscripts_tsv/' + vid_fname+'.tsv', sep='\t')
 
             segment_starts = tsv['start'].values
             segment_ends = tsv['end'].values
@@ -65,6 +64,6 @@ if __name__ == '__main__':
                 subprocess.run(['ffmpeg', '-ss', str(frame_sample_time/1000.),  '-i',  local_vid_fpath, '-frames:v', '1', image_output_fpath, '-y'] )
 
         except:
-            print('ERROR-opening '+ 'pres_ad_whisptranscripts_tsv/' + vid_fname.split('.')[0]+'.tsv')
+            print('ERROR-opening '+ 'pres_ad_whisptranscripts_tsv/' + vid_fname+'.tsv')
 
 

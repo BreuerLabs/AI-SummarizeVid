@@ -2,7 +2,7 @@ import numpy as np
 from datetime import datetime
 import pandas as pd
 import subprocess
-# import os
+import os
 import glob
 from mpi4py import MPI
 
@@ -13,7 +13,7 @@ This script saves a still frame at evenly time-spaced intervals from each ad vid
 
 
 ## NOTE: This script requires ffmpeg for frame extraction
-## NOTE: We assume videos are stored in pres_ad_videos/
+## NOTE: We assume videos are stored in PRES_AD_VIDEOS/
 
 
 METADATA_FNAME = 'METADATA.csv'
@@ -46,7 +46,7 @@ if __name__ == '__main__':
                 proc_elapsed_min * float(len(local_mastercsv_idx_split)-local_count)/float(local_count), 'mins remain')
 
         vid_fname = metadata_df['FILENAME'].values[idx]
-        local_vid_fpath = 'pres_ad_videos/' + vid_fname
+        local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
         try:
             # Take frames at 3sec intervals until video end is reached:
