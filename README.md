@@ -40,7 +40,11 @@ This step requires a local installation of *ffmpeg*, which is called via Python.
 
 We generate a brief summary of each video keyframe by submitting it to a multimodal LLM: *GPT-4-vision*, accompanied by a custom prompt that provides context using the ad metadata. Specifically, we submit the following prompt for each keyframe:
 
+**Note**: Add your own OpenAPI API key to the script, and you will run this script twice: once for speech-segment-centered keyframes, and a second time to describe regular-interval keyframes (change the parameter at the top of the script per whichever you want to run each time).
+
 ### Step 4: Video summarization
 We generate each ad summary by querying GPT using a customized summarization prompt that provides (1) the ad transcript generated in **Step 1**; (2) the time-ordered set of approximately 20 descriptions of video imagery generated in **Step 3** above including the merged speech-segment-based key frames and regular interval frames (merged by ascending timestamps); and (3) a contextual description of the ad that contains relevant ad metadata. 
+
+**Note**: Add your own OpenAPI API key to the script.
 
 
