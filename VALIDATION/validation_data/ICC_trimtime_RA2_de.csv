@@ -1,0 +1,220 @@
+﻿Video ID,Start,Start working?,Total between,Stop,Stop working?,Notes
+P-1-5,00;00;00.300,Y,00;01;03.500,00;01;03.800,Y,
+P-1-18,00;00;02.000,N (early),00;00;20.700,00;00;22.700,Y,
+P-2-28,00;00;09.300,N (early),00;00;43.600,00;00;52.900,N (late),tape information at beginning; white screen then blue screen at end
+P-5-100,00;00;01.000, N (early) ,00;00;17.900,00;00;18.900,N (late),0100 displayed a beginning; 0101 displayed at end
+P-8-131,00;00;07.200,N (early),00;00;59.700,00;01;06.900,Y,ID screen displayed at beginning followed by static
+P-8-138,00;00;07.200,N (early),00;00;20.800,00;00;28.000,Y,ID screen and black static at beginning
+P-8-142,00;00;07.400,N (early),00;00;20.400,00;00;27.800,Y,ID screen and black static at beginning
+P-9-153,00;00;07.200,N (early),00;00;57.600,00;01;04.800,Y,ID screen and black static at beginning
+P-9-156,00;00;07.000,N (early),00;00;18.300,00;00;25.300,Y,ID screen at beginning
+P-9-158,00;00;07.100,N (early),00;00;20.100,00;00;27.200,Y,ID screen at beginning
+P-10-182,00;00;05.200,N (early),00;01;00.000,00;01;05.200,N (late),0182 displayed with ringing at the beginning; dislplayed 0183 at end
+P-10-189,00;00;05.100,N (early),00;01;00.400,00;01;05.500,N (late),0189 at beginning; 0190 at end
+P-10-196,00;00;06.100,N (early),00;00;20.300,00;00;26.400,N (late),0196 and extra footage at beginning; 0197 at end
+P-13-212,00;00;06.400,N (early),00;01;00.200,00;01;06.600,N (late),0212 and extra footage at beginning; 0213 at end
+P-13-223,00;00;05.900,N (early),00;01;00.100,00;01;06.000,Y,0223 and grey screen w/ circle at beginning
+P-12-226,00;00;06.300,N (early),00;00;19.700,00;00;26.000,Y,0226 and grey screen w/ circle at beginning
+P-17-257,00;00;06.300,N (early),00;00;59.800,00;01;06.100,N (late),0257 and extra footage at beginning; 0258 at end
+P-17-258,00;00;04.800,N (early),00;01;00.000,00;01;04.800,N (late),0258 and extra footage at beginning; 0259 shown at end
+P-17-264,00;00;04.800,N (early),00;00;19.600,00;00;24.400,N (late),0264 at beginning and 0265 at end
+P-17-269,00;00;04.500,N (early),00;00;56.500,00;01;01.000,Y,0269 at beginning
+P-17-276,00;00;05.200,N (early),00;00;20.000,00;00;25.200,N (late),0276 at beginning; 0277 at end
+P-21-300,00;00;05.600,N (early),00;01;00;000,00;01;05.600,N (late),0300 at beginning; 0301 at end
+P-21-329,00;00;04.100,N (early),00;00;59.00,00;01;03.100,N (late),0329 at beginning; 0330 at end
+P-22-338,00;00;04.700,N (early),00;00;40.300,00;00;45.000,Y,0338 at beginning
+P-22-342,00;00;05.100,N (early),00;00;39.900,00;00;45.000,Y,0342 at beginning
+P-23-348,00;00;20.300,N (early),00;01;00.000,00;01;20.300,N (late),0348 and ad countdown at beginning; screen at end
+P-23-394,00;00;21.800,N (early),00;00;54.000,00;01;15.800,N (late),"0394, static, and countdown at beginning; blank screen and 0395 at end"
+P-24-380,00;00;02.400,N (early),00;01;00.200,00;01;02.600,N (late),0380 at beginning and 0381 at end
+P-24-383,00;00;03.400,N (early),00;01;00.300,00;01;03.700,N (late),0383 at beginning; seconds of black screen at end
+P-29-432,00;00;24.400,N (early),00;01;00.000,00;01;24.400,N (late),0432 and ad countdown at beginning; identical to 0391 at end
+P-31-450,00;00;11.000,N (early),00;00;31.000,00;00;42.000,Y,0450 and ad countdown at beginning
+P-32-460,00;00;03.400,N (early),00;00;29.600,00;00;33.000,N (late),0460 at beginning; 0461 at end
+P-32-465,00;00;03.200,N (early),00;00;30.000,00;00;33.200,N (late),0465 at beginning; 0466 at end
+P-34-538,00;00;10.000,N (early),00;01;00;000,00;01;10.000,N (late),0538 and ad countdown at beginning; 0539 at end
+P-34-547,00;00;10.000,N (early),00;01;00.300,00;01;10;300,N (late),0547 and ad countdown at beginning; 0548 at end
+P-36-1008,00;00;09.300,N (early),00;00;29.700,00;00;39.000,Y,1008 and ad countdown at beginning
+P-36-1071,00;00;07.400,N (early),00;00;30.000,00;00;37.400,N (late),1071 and ad countdown at beginning; 1072 at end
+P-41-2009,00;00;08.700,N (early),00;00;59.500,00;01;08.200,N (late),2009 and ad countdown at beginning; 2010 at end
+P-41-2025,00;00;06.500,N (early),00;00;29.900,00;00;36.400,N (late),2025 and ad countdown at beginning; 2026 at end
+P-41-2042,00;00;06.100,N (early),00;00;30.000,00;00;36.100,N (late),2042 and ad countdown at beginning; 2043 at end
+P-41-2055,00;00;07.800,N (early),00;00;29.800,00;00;37.600,N (late),2055 and ad countdown at beginning; 2056 at end
+P-43-2106,00;00;09.500,N (early),00;00;29.500,00;00;39.000,Y,2106 and ad countdown at beginning
+P-48-2255,00;00;16.700,N (early),00;00;29.700,00;00;46.400,N (late),2255 and ad countdown at beginning; 2256 at end
+P-52-2302,00;00;11.000,N (early),00;00;30.000,00;00;41.200,Y,ID screen at ad countdown at beginning
+P-57-953,00;00;12.000,N (early),00;00;30.000,00;00;42.000,N (late),0953 at beginning; 0954 at end
+P-58-2460,00;00;08.000,N (early),00;00;30.000,00;00;38.000,Y,2460 and ad countdown at beginning
+P-68-747,00;00;22.000,N (early),00;00;29.800,00;00;51.800,N (late),"0747, green static, and ad countdown at beginning; 0748 at end"
+P-71-765,00;00;09.300,N (early),00;00;29.800,00;00;39.100,N (late),765 and ad countdown at beginning; 766 at end
+P-71-769,00;00;09.400,N (early),00;00;30.000,00;00;39.400,N (late),769 and ad countdown at beginning; 770 at end
+P-100-853,00;00;10.200,N (early),00;00;29.800,00;00;40.000,Y,0853 and ad countdown at beginning
+P-109-5585,00;00;10.400,N (early),00;01;48.100,00;01;58.500,N (late),5585 and static box at beginning; 5586 at end
+P-139-5881,00;00;08.300,N (early),00;01;00.000,00;01;08.300,N (late),5881 and circle on screen at beginning; 5882 at end
+P-140-10514,00;01;21.300,N (early),00;00;30.200,00;01;51.500,N (late),10514 followed by colorful screen and ringing noise at beginning; 10515 at end
+P-195-12098,00;00;13.300,N (early),00;00;55.700,00;01;09.000,Y,12098 and ad countdown at beginning
+P-195-12108,00;01;00.000,N (early),00;00;31.000,00;01;31.000,Y,"12108, colorful screen and ringing, and ad countdown at beginning"
+P-197-12138,00;00;32.900,N (early),00;00;28.900,00;01;01.800,Y,"12138, colorful screen and ringing, and ad countdown at beginning"
+P-197-12141,00;00;11.900,N (early),00;00;28.600,00;00;40.500,N (late),12141 and ad countdown at beginning; 12142 at end
+P-197-12142,00;00;11.300,N (early),00;00;30.000,00;00;41.300,N (late),12142 and ad countdown at beginning; 12143 at end
+P-207-12186,00;00;44.500,N (early),00;00;32.600,00;01;17.100,N (late),"12186, colorful screen and ringing, and ad countdown at beginning; 12189 at end"
+P-210-12264,00;00;18.800,N (early),00;01;00.200,00;01;19.000,Y,12264 and ad countdown at beginning
+P-212-12306,00;01;07.800,N (early),00;00;30.000,00;01;37.800,N (late),"12306, colorful screen with ringing, and ad countdown at beginning; 12307 at end"
+P-212-12319,00;00;38.300,N (early),00;00;30.500,00;01;08.800,Y,"12319, colorful screen and beeping, and ad countdown at beginning"
+P-214-12329,00;00;39.300,N (early),00;00;30.000,00;01;09.300,N (late),"12329, colorful screen and ringing, and ad countdown at beginning; some static at end"
+P-214-12350,00;00;42.800,N (early),00;00;28.800,00;01;11.600,N (late),"12350, colorful screen and ringing, and ad countdown at beginning; static and 12351 at end"
+P-290-14273,00;00;26.000,N (early),00;00;29.600,00;00;55.700,N (late),"14273, black screen, and ad countdown at beginning; black screen and 14274 at end"
+P-291-14328,00;00;23.700,N (early),00;01;00.000,00;01;23.700,N (late),14328 and ad information at beginning; 14239 at end
+P-293-14366,00;00;20.400,N (early),00;01;00.000,00;01;20.400,N (late),14366 and ad countdown at beginning; 14367 at end
+P-312-14718,00;00;37.200,N (early),00;01;00.300,00;01;37.500,N (late),"14718, static, and ad countdown at beginning; 14719 at end"
+P-315-8972,00;00;10.000,N (early),00;00;59.500,00;01;09.500,N (late),8972 at beginning and audio starts early; 8973 at end
+P-316-8988,00;00;07.200,N (early),00;00;20.800,00;00;28.00,Y,ID screen at beginning
+P-321-14851,00;00;14.800,N (early),00;00;30.000,00;00;44.800,N (late),14851 and ad countdown at beginning; 14582 at end
+P-323-14943,00;00;13.200,N (early),00;00;31.800,00;00;45.000,Y,14943 and ad countdown at beginning
+P-324-14979,00;00;08.700,N (early),00;00;30.300,00;00;39.000,Y,14979 and ad countdown beeping at beginning
+P-344-15290,00;00;18.000,N (early),00;00;30.000,00;00;48.000,Y,15290 and ad countdown beeping at beginning
+P-344-15291,00;00;38.500,N (early),00;00;31.500,00;01;10.000,Y,"15291, colorful screen and ringing, ad information, and black screen at beginning"
+P-359-9968,00;00;11.700,N (early),00;01;06.900,00;01;18.600,N (late),9968 and black screen w/ circles at beginning; 9969 and static at end
+P-365-2164,00;00;10.300,N (early),00;01;00.200,00;01;10.500,N (late),2164 and static at beginning; static at end
+P-374-30448,00;00;09.300,N (early),00;00;30.000,00;00;39.300,N (late),30448 and ad countdown at beginning; 20449 at end
+P-387-30797,00;00;07.100,N (early),00;00;30.000,00;00;37.100,N (late),30797 and ad information at beginning; 30798 at end
+P-388-30843,00;00;04.700,N (early),00;00;29.400,00;00;34.100,N (late),30843 at beginning; 30844 at end
+P-399-31624,00;00;07.400,N (early),00;00;30.000,00;00;37.400,N (late),31624 at beginning; black screen at end
+P-456-95440,00;00;14.800,N (early),00;00;31.200,00;00;46.000,Y,ID screen and ad information at beginning
+P-475-96882,00;00;07.700,N (early),00;00;31.300,00;00;39.000,Y,ID screen at beginning
+P-475-96888,00;00;07.500,N (early),00;00;49.500,00;00;57.000,Y,ID screen at beginning
+P-475-96911,00;00;07.500,N (early),00;00;31.500,00;00;39.000,Y,ID screen at beginning
+P-475-96915,00;00;07.100,N (early),00;00;30.900,00;00;38.000,Y,ID screen at beginning
+P-500-94360,00;00;09.900,N (early),00;00;31.100,00;00;41.000,Y,ID screen at beginning
+P-500-94376,00;00;12.100,N (early),00;00;30.900,00;00;43.000,Y,ID screen and ad countdown at beginning
+P-601-114457,00;00;07.000,N (early) ,00;01;01.000,00;01;08.000,Y,ID screen at beginning
+P-602-114509,00;00;06.200,N (early),00;00;30.800,00;00;37.000,Y,ID screen at beginning
+P-602-114531,00;00;05.700,N (early),00;00;30.300,00;00;36.000,Y,ID screen at beginning
+P-603-114575,00;00;06.100,N (early),00;00;29.900,00;00;36.000,Y,ID screen at beginning
+P-1009-40492,00;00;00.700,N (early),00;01;00.000,00;01;00.700,N (late),40492 at beginning; 40493 at end
+P-1012-40693,00;00;09.900,N (early),00;00;30.100,00;00;40.000,Y,ID screen and ad information w/ ringing at beginning
+P-1013-40787,00;00;03.300,N (early),00;00;30.000,00;00;33.300,N (late),ID screen at beginning; black screen at end
+P-1023-41366,00;00;12.800,N (early),00;00;30.000,00;00;42.800,N (late),"ID screen, static, and ad countdown at beginning; static and ID screen at end"
+P-1037-42338,00;00;14.900,N (early),00;00;30.000,00;00;44.900,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1051-43126,00;00;08.100,N (early),00;00;30.000,00;00;38.100,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1051-43139,00;00;12.600,N (early),00;00;30.000,00;00;42.600,N (late) ,ID screen and ad countdown at beginning; ID screen at end
+P-1065-44022,00;00;15.000,N (early),00;00;29.900,00;00;44.900,N (late) ,ID screen and ad countdown at beginning; ID screen at end
+P-1065-44049,00;00;12.000,N (early),00;00;30.000,00;00;42.000,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1066-44077,00;00;15.000,N (early),00;00;10.100,00;00;25.100,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1069-44262,00;00;15.100,N (early),00;00;30.000,00;00;45.100,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1069-44303,00;00;14.800,N (early),00;00;30.000,00;00;44.800,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1081-45113,00;00;15.000,N (early),00;01;00.000,00;01;15.000,N (late),ID screen and ad information at beginning; black screen at end
+P-1082-45162,00;00;18.700,N (early),00;01;00.000,00;01;18.700,N (late),"ID screen, colorful screen, ad information, and black screen at beginning; ID screen at end"
+P-1083-45195,00;00;15.300,N (early),00;00;29.900,00;00;45.200,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1083-45217,00;00;15.400,N (early),00;00;29.800,00;00;45.200,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1083-45226,00;00;13.000,N (early),00;00;30.000,00;00;43.000,N (late),ID screen and ad countdown at beginning; black screen at end
+P1084-45258,00;00;13.800,N (early),00;00;30.000,00;00;43.600,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1084-45621,00;00;15.100,N (early),00;00;30.000,00;00;44.900,N (late),ID screen and ad information at beginning; ID screen at end
+P-1088-45446,00;00;15.800,N (early),00;00;28.800,00;00;45.600,N (late),ID screen and ad information at beginning; ID screen at end
+P-1113-47099,00;00;14.400,N (early),00;00;29.900,00;00;44.300,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1113-47102,00;00;15.800,N (early),00;00;30.000,00;00;45.800,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1114-47162,00;00;14.700,N (early),00;00;59.600,00;01;14.300,N (late),ID screen and ad information at beginning; black screen at end
+P-1153-49981,00;00;14.400,N (early),00;00;30.600,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1183-51840,00;00;14.400,N (early),00;00;29.900,00;00;44.300,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1183-51855,00;00;15.200,N (early),00;00;30.200,00;00;45.400,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1186-51974,00;00;16.400,N (early),00;00;30.600,00;00;47.000,Y,ID screen and ad countdown at beginning
+P-1190-35243,00;00;14.100,N (early),00;00;28.600,00;00;42.700,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1190-35256,00;00;15.600,N (early),00;00;30.000,00;00;45.600,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1190-35257,00;00;12.900,N (early),00;00;29.800,00;00;42.700,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1190-35279,00;00;19.400,N (early),00;00;59.900,00;01;19.300,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1197-52122,00;00;15.700,N (early),00;00;30.000,00;00;45.700,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1201-52329,00;00;10.800,N (early),00;00;29.900,00;00;40.700,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1231-57463,00;00;14.600,N (early),00;00;30.000,00;00;44.600,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1232-57586,00;00;09.500,N (early),00;00;30.000,00;00;39.500,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1264-59473,00;00;20.100,N (early),00;00;31.900,00;00;52.000,Y,ID screen and ad countdown at beginning
+P-1264-59480,00;00;23.000,N (early),00;01;00.000,00;01;24.000,Y,ID screen and ad countdown at beginning
+P-1268-35052,00;00;13.700,N (early),00;00;30.000,00;00;43.700,N (early),ID screen and ad information at beginning; ID screen at end
+P-1289-59973,00;00;14.000,N (early),00;00;31.000,00;00;45.000,Y,ID screen and ad information at beginning
+P-1318-60594,00;00;16.200,N (early),00;00;30.800,00;00;47.000,Y,ID screen and ad information at beginning
+P-1332-64012,00;00;15.400,N (early),00;00;30.600,00;00;46.000,Y,ID screen and ad information at beginning
+P-1351-63024,00;00;12.600,N (early),00;01;03.400,00;01;16.000,Y,ID screen and ad information at beginning
+P-1353-63367,00;00;14.300,N (early),00;00;10.700,00;00;25.000,Y,ID screen and ad information at beginning
+P-1354-62771,00;00;13.700,N (early),00;00;30.300,00;00;44.000,Y,ID screen and ad information at beginning
+P-1361-63305,00;00;16.300,N (early),00;01;00.700,00;01;17.000,Y,ID screen and ad information at beginning
+P-1391-68006,00;00;15.200,N (early),00;00;30.000,00;00;45.200,N (late),ID screen and ad information at beginning; black screen at end
+P-1411-68103,00;00;15.500,N (early),00;00;30.000,00;00;45.500,N (late),ID screen and ad information at beginning; black screen at end
+P-1414-68133,00;00;14.200,N (early),00;00;30.000,00;00;44.200,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1414-68166,00;00;12.500,N (early),00;00;30.000,00;00;42.500,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1415-68189,00;00;15.800,N (early),00;00;30.000,00;00;45.800,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1415-68229,00;00;15.300,N (early),00;00;30.000,00;00;45.300,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1415-68236,00;00;15.700,N (early),00;00;30.000,00;00;45.700,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1415-68241,00;00;15.900,N (early),00;00;31.100,00;00;47.000,Y,ID screen and ad countdown at beginning
+P-1416-68247,00;00;14.600,N (early),00;00;30.000,00;00;44.600,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1416-68257,00;00;15.600,N (early),00;00;30.000,00;00;45.600,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1432-69061,00;00;05.000,N (early),00;02;24.000,00;02;29.000,Y,ID screen at beginning
+P-1436-67064,00;00;16.000,N (early),00;00;30.000,00;00;46.000,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1436-67065,00;00;15.300,N (early),00;00;30.000,00;00;45.300,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1436-67066,00;00;15.700,N (early),00;00;30.000,00;00;45.700,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1498-74086,00;00;15.600,N (early),00;00;59.400,00;01;15.000,N (late),ID screen and ad information at beginning; black screen at end
+P-1498-74089,00;00;15.400,N (early),00;00;56.400,00;01;11.800,N (late),ID screen and ad information at beginning; black screen at end
+P-1498-74092,00;00;15.600,N (early),00;01;00.100,00;01;15.600,N (late),ID screen and ad information at beginning; black screen at end
+P-1498-74101,00;00;15.400,N (early),00;01;00.000,00;01;15.400,N (late),ID screen and ad information at beginning; black screen at end
+P-1500-75016,00;00;15.500,N (early),"00;01;01,100",00;01;16.600,N (late),ID screen and ad information at beginning; black screen at end
+P-1570-78902,00;00;14.100,N (early),00;01;00.000,"00;01;14,100",N (late),ID screen and ad information at beginning; black screen at end
+P-1570-78926,00;00;17.900,N (early),00;00;59.300,00;01;17.200,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1581-79624,00;00;14.600,N (early),00;00;20.000,00;00;34.600,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1616-82759,00;00;10.900,N (early),00;00;30.000,00;00;40.900,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1616-82779,00;00;10.200,N (early),00;00;30.000,00;00;40.200,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1617-83687,00;00;11.200,N (early),00;00;30.000,00;00;41.200,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1620-81909,00;00;14.200,N (early),00;00;29.900,00;00;44.100,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1620-81913,00;00;15.000,N (early),00;00;29.900,00;00;44.900,N (late),ID screen and ad information at beginning; black screen at end
+P-1624-82550,00;00;14.500,N (early),00;00;30.000,00;00;44.500,N (late),ID screen and ad information at beginning; black screen at end
+P-1624-82555,00;00;15.500,N (early),00;00;30.000,00;00;45.500,N (late),ID screen and ad countdown at beginning; black screen at end
+P-1625-82328,00;00;15.400,N (early),00;00;30.000,00;00;45.400,N (late),ID screen and ad information at beginning; black screen at end
+P-1625-82561,00;00;15.300,N (early),00;00;15.000,00;00;30.300,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1625-82571,00;00;18.100,N (early),00;00;30.000,00;00;48.100,N (late),ID screen and ad information at beginning; black screen at end
+P-1631-83524,00;00;11.900,N (early),00;00;16.100,00;00;28.000,Y,ID screen and ad countdown at beginning
+P-1635-83016,00;00;10.600,N (early),00;00;30.000,00;00;40.600,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1635-83018,00;00;09.800,N (early),00;00;30.000,00;00;39.800,N (late),ID screen and ad information at beginning; black screen and ID screen at end
+P-1654-84438,00;00;12.200,N (early),00;00;29.500,00;00;41.700,N (late),ID screen and ad information at beginning; black screen at end
+P-1708-90180,00;00;11.000,N (early),00;00;30.000,00;00;41.000,N (late),ID screen and ad information w/ ringing at beginning; black screen and ID screen at end
+P-1771-101613,00;00;08.600,N (early),00;00;30.400,00;00;39.000,Y,ID screen at beginning
+P-1771-101620,00;00;08.100,N (early),00;00;30.900,00;00;39.000,Y,ID screen at beginning
+P-1772-101699,00;00;09.500,N (early),00;00;30.500,00;00;40.000,Y,ID screen at beginning
+P-1791-92878,00;00;07.600,N (early),00;00;29.600,00;00;37.200,N (late),ID screen at beginning; black screen at end
+P-1791-92885,00;00;06.800,N (early),00;00;31.200,00;00;38.000,Y,ID screen at beginning
+P-1798-102499,00;00;07.900,N (early),00;00;30.000,00;00;37.900,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1798-102543,00;00;13.800,N (early),00;00;30.000,00;00;43.800,N (late),ID screen and ad countdown at beginning; black screen and ID screen at end
+P-1812-94092,00;00;16.300,N (early),00;00;29.700,00;00;46.000,N (late),ID screen and ad information at beginning; black screen at end
+P-1817-102732,00;00;05.700,N (early),00;00;34.000,00;00;39.700,N (late),ID screen at beginning; ID screen at end
+P-1818-102759,00;00;13.500,N (early),00;00;29.900,00;00;43.400,N (late),"ID screen, ad countdown, ""wacky,"" and white static at beginning; black screen and ID screen at end"
+P-1818-102785,00;00;06.200,N (early),00;00;30.000,00;00;36.200,N (late),ID screen at beginning; black screen at end
+P-1818-102790,00;00;05.500,N (early),00;00;30.000,00;00;35.500,N (late),ID screen at beginning; black screen at end
+P-1818-102796,00;00;05.700,N (early),00;00;30.000,00;00;35.700,N (late),ID screen at beginning; ID screen at end
+P-1826-103313,00;00;09.000,N (early),00;00;30.000,00;00;39.000,N (late),ID screen and ad countdown at beginning; ID screen at end
+P-1826-103333,00;00;08.600,N (early),00;01;00.000,00;01;08.600,N (late),ID screen and ad information at beginning; ID screen at end
+P-1827-103453,00;00;14.200,N (early),00;00;30.800,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1840-104205,00;00;07.300,N (early),00;00;30.000,00;00;37.300,N (late),ID screen at beginning; black screen at end
+P-1895-107908,00;00;07.100,N (early),00;00;30.000,00;00;37.100,N (late),ID screen at beginning; black screen at end
+P-1903-108423,00;00;06.200,N (early),00;00;29.500,00;00;35.700,N (late),ID screen at beginning; black screen at end
+P-1904-108500,00;00;05.700,N (early),00;00;38.300,00;00;44.000,Y,ID screen at beginning
+P-1905-108583,00;00;05.700,N (early),00;01;00.300,00;01;06.000,Y,ID screen at beginning
+P-1905-108593,00;00;07.700,N (early),00;01;58.300,00;02;06.000,Y,ID screen at beginning
+P-1907-108725,00;00;06.700,N (early),00;00;29.400,00;00;36.100,N (late),ID screen at beginning; black screen at end
+P-1910-108897,00;00;06.200,N (early),00;01;05.800,00;01;12.000,Y,ID screen at beginning
+P-1921-130004,00;00;10.700,N (early),00;00;31.300,00;00;42.000,Y,ID screen and ad information at beginning
+P-1952-132053,00;00;08.600,N (early),00;00;31.400,00;00;40.000,Y,ID screen and ad countdown at beginning
+P-1954-132192,00;00;13.600,N (early),00;01;01.400,00;01;15.000,Y,ID screen and ad countdown at beginning
+P-1954-132204,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1955-132243,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1955-132275,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1957-132420,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1958-132465,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1958-132491,00;00;13.600,N (early),00;00;31.400,00;00;45.000,Y,ID screen and ad countdown at beginning
+P-1958-132507,00;00;13.100,N (early),00;00;30.900,00;00;44.000,Y,ID screen and ad countdown at beginning
+P-2014-136255,00;00;08.600,N (early),00;00;51.000,00;00;59.600,N (late),ID screen at beginning; black screen at end
+P-2026-136930,00;00;09.700,N (early),00;00;30.000,00;00;39.700,N (late),136930 and black screen at beginning; black screen at end
+P-2054-138204,00;00;07.600,N (early),00;01;22.900,00;01.30.500,N (late),ID screen at beginning; black screen at end
+P-2060-138621,00;00;07.700,N (early),00;00;30.000,00;00;37.700,N (late),ID screen at beginning; black screen at end
+P-2079-139464,00;00;12.400,N (early),00;00;30.000,00;00;42.400,N (late),ID screen at beginning; black screen at end
+P-2087-139831,00;00;09.700,N (early),00;00;30.000,00;00;39.700,N (late),ID screen at beginning; black screen at end
+P-2087-139878,00;00;08.600,N (early),00;01;00.000,00;01;08.600,N (late),ID screen at beginning; black screen at end
+P-2089-139967,00;00;09.500,N (early),00;01;43.000,00;01;52.500,N (late),ID screen at beginning; black screen at end
+P-2089-139968,00;00;08.600,N (early),00;00;53.000,00;01;01.600,N (late),ID screen at beginning; black screen at end
+P-2125-142147,00;00;04.100,N (early),00;01;14.900,00;01;19.000,Y,142147 at beginning
+P-2125-142151,00;00;04.000,N (early),00;01;45.000,00;01;49.000,Y,142151 at beginning
