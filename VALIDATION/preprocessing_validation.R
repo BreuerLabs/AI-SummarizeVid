@@ -138,9 +138,9 @@ trim_end_stratify_plot
 nrow(preproc) == nrow(preprocstart) # assert
 nrow(preproc) == nrow(preprocend) # assert
 
-table(preproc$sample_round)
-plot(preprocstart$coded_start, preprocstart $inferred_start_incl_manuals) 
-plot(preprocend$coded_end, preprocend$inferred_end_incl_manuals)
+# table(preproc$sample_round)
+# plot(preprocstart$coded_start, preprocstart $inferred_start_incl_manuals) 
+# plot(preprocend$coded_end, preprocend$inferred_end_incl_manuals)
 
  
 TOLERANCE_SEC_VALIDATION = 3
@@ -175,7 +175,15 @@ summary(reg_end)
 summary(reg_absstartplusabsend)
 
 
-
+# Automatically set up the regression table
+library(stargazer)
+stargazer(
+reg_start, reg_end, reg_absstartplusabsend,
+title="Beta regression of trimming errors on partisanship and year",
+dep.var.labels=c("Error_{start}", "Error_{end}", "|Error_{start}|+|Error_{end}|"),
+covariate.labels=c("Republican","Election Year","Repub.*Elec.Year"),
+omit.stat=c("LL","ser","f")
+)
 
 
 
