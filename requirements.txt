@@ -1,0 +1,11 @@
+# System dependencies (install separately):
+# - ffmpeg
+# - OpenMPI (for mpi4py / mpirun)
+
+numpy==1.26.4
+pandas==2.2.3
+mpi4py==3.1.6
+openai==0.28.1
+openai-whisper==20240930
+jiwer==3.0.5
+num2words==0.5.13
