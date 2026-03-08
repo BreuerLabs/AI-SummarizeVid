@@ -46,10 +46,10 @@ def send_frame_to_gpt(this_ad_frame, ELECTION_YEAR, PARTY, CANDIDATE, TRANSCRIPT
 
     PROMPT_MESSAGES = {
         "role": "user",
-        "content": [prompt, {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{this_ad_frame}"}}],
+        "content": [{"type": "text", "text": prompt}, {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{this_ad_frame}"}}],
     }
     parameters = {
-        "model": "gpt-4-vision-preview",
+        "model": "gpt-4o",
         "messages": [PROMPT_MESSAGES],
         # "api_key": os.environ["GPT_API_KEY"],
         # "response_format": {"type": "json_object"},  # Added response format
@@ -75,14 +75,16 @@ if __name__ == '__main__':
 
     # Initialize output storage directory if it doesn't exist
     if rank == 0:
-        if not os.path.exists(output_directory): 
-            os.makedirs(output_directory) 
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+
+    comm.Barrier()  # Ensure rank 0 finishes creating directories before all ranks proceed
 
     sleep(rank*0.2) # Avoid rate limit issue that arises when all procs make first API query simultaneously.
 
     metadata_df = pd.read_csv(METADATA_FNAME)
 
-    already_donebyGPT_frames = glob.glob(output_directory+'/*.txt')
+    already_donebyGPT_frames = set(glob.glob(output_directory+'/*.txt'))
     tot_num_frames_to_do = len(glob.glob(input_directory+'/*'))
     num_frames_left_to_do = tot_num_frames_to_do - len(already_donebyGPT_frames)
 
@@ -120,10 +122,11 @@ if __name__ == '__main__':
             with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
                 TRANSCRIPT = text_file.read()
 
-                if pd.isnull(TRANSCRIPT):
+                if not TRANSCRIPT.strip():
                     TRANSCRIPT = 'null, as no words are spoken in the ad'
 
-            for this_frame_fpath in glob.glob(input_directory+'/'+vid_fname.split('.')[0] + '*'):
+            vid_stem = vid_fname.split('.')[0] if DIRECTORY_SUFFIX == 'speechcentered' else vid_fname
+            for this_frame_fpath in glob.glob(input_directory+'/'+vid_stem + '_*'):
                 totcount_of_frames_processed_thisproc += 1
 
                 if output_directory+'/'+this_frame_fpath.split('/')[-1]+'.txt' in already_donebyGPT_frames:

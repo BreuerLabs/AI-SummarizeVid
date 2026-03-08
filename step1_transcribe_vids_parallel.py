@@ -40,18 +40,19 @@ if __name__ == '__main__':
             os.makedirs("pres_ad_whisptranscripts_json") 
         if not os.path.exists("pres_ad_whisptranscripts_tsv"): 
             os.makedirs("pres_ad_whisptranscripts_tsv") 
-        if not os.path.exists("pres_ad_whisptranscripts_txt"): 
-            os.makedirs("pres_ad_whisptranscripts_txt") 
+        if not os.path.exists("pres_ad_whisptranscripts_txt"):
+            os.makedirs("pres_ad_whisptranscripts_txt")
 
+    comm.Barrier()  # Ensure rank 0 finishes creating directories before all ranks proceed
 
     vidfilepaths_local = glob.glob('PRES_AD_VIDEOS/*.mp4')
     filepaths_transcripts_local = glob.glob('pres_ad_whisptranscripts_json/*.json')
-    transcribed_videos_local = [x.split('/')[-1].split('.')[0] for x in filepaths_transcripts_local]
+    transcribed_videos_local = [os.path.basename(x).rsplit('.json', 1)[0] for x in filepaths_transcripts_local]
     if rank == 0:
         print('Local video count:', len(vidfilepaths_local))
         print('Local transcript count:', len(transcribed_videos_local))
 
-    all_vid_fpaths = [vid_fpath.split('/')[-1] for vid_fpath in vidfilepaths_local]
+    all_vid_fpaths = [os.path.basename(vid_fpath) for vid_fpath in vidfilepaths_local]
     all_vid_fpaths_LEFTTODO = list(set(all_vid_fpaths).difference(transcribed_videos_local))
 
     this_proc_left_to_do = np.array_split(all_vid_fpaths_LEFTTODO, size)[rank]
@@ -59,24 +60,35 @@ if __name__ == '__main__':
     for idx, vid_fpath_id in enumerate( this_proc_left_to_do ): 
         vid_fpath = 'PRES_AD_VIDEOS/' + vid_fpath_id 
 
-        transcription = whispermodel.transcribe(vid_fpath, fp16=False)
-        with open('pres_ad_whisptranscripts_txt/' + vid_fpath_id +'.txt', "w") as text_file:
-            text_file.write(transcription['text'])
+        try:
+            transcription = whispermodel.transcribe(vid_fpath, fp16=False)
+            with open('pres_ad_whisptranscripts_txt/' + vid_fpath_id +'.txt', "w") as text_file:
+                text_file.write(transcription['text'])
 
-        # Occassionally whisper throws an arbitrary error, so we wrap this in a try
-        try: 
-            tsv_writer = get_writer("tsv", 'pres_ad_whisptranscripts_tsv')
-            tsv_writer(transcription, vid_fpath_id +'.tsv', options)
-            json_writer = get_writer("json", 'pres_ad_whisptranscripts_json')
-            json_writer(transcription,  vid_fpath_id +'.json', options)
-        except:
-            print('ERROR saving transcript with file: '+ vid_fpath_id, 'note that transcript[text] is', transcription['text'])
+            # Occassionally whisper throws an arbitrary error, so we wrap this in a try
+            write_error = False
+            try:
+                tsv_writer = get_writer("tsv", 'pres_ad_whisptranscripts_tsv')
+                tsv_writer(transcription, vid_fpath_id +'.tsv', options)
+                json_writer = get_writer("json", 'pres_ad_whisptranscripts_json')
+                json_writer(transcription,  vid_fpath_id +'.json', options)
+            except Exception as e:
+                write_error = True
+                print('ERROR saving transcript with file: '+ vid_fpath_id, 'note that transcript[text] is', transcription['text'], e)
+                error_files_thisproc.append(vid_fpath_id)
+                error_msgs_thisproc.append(str(e))
+        except Exception as e:
+            print('ERROR transcribing file: '+ vid_fpath_id, e)
+            error_files_thisproc.append(vid_fpath_id)
+            error_msgs_thisproc.append(str(e))
+            continue
 
-        vid_count += 1
+        if not write_error:
+            vid_count += 1
         elapsed = (datetime.now()-time_start).total_seconds()
-        print('\n\nRank', rank, 'Completed', vid_count, 'of', len(this_proc_left_to_do)/float(size),\
+        print('\n\nRank', rank, 'Completed', vid_count, 'of', len(this_proc_left_to_do),\
                 'elapsed:', elapsed//60, 'minutes','remaining time:', \
-                    (elapsed/vid_count)*(len(this_proc_left_to_do)/float(size) - vid_count)/60., 'minutes',
+                    (elapsed/vid_count)*(len(this_proc_left_to_do) - vid_count)/60., 'minutes',
                 'ERRORS:', error_files_thisproc, 'num errors', len(error_files_thisproc),'ErrorMessages', error_msgs_thisproc)
         
     error_messages = comm.gather(error_msgs_thisproc, root=0)
@@ -85,5 +97,4 @@ if __name__ == '__main__':
     if rank == 0:
         print('\n\nerror messages:', error_messages)
         print('\n\nerror files:', error_files)
-
 

@@ -61,10 +61,12 @@ if __name__ == '__main__':
 
     # Create keyframe storage directory if they don't already exist:
     if rank == 0:
-        if not os.path.exists("GPT_video_summaries"): 
-            os.makedirs("GPT_video_summaries") 
+        if not os.path.exists("GPT_video_summaries"):
+            os.makedirs("GPT_video_summaries")
 
-    already_summarized_videos = glob.glob('GPT_video_summaries/*.txt')
+    comm.Barrier()  # Ensure rank 0 finishes creating directories before all ranks proceed
+
+    already_summarized_videos = set(glob.glob('GPT_video_summaries/*.txt'))
 
     metadata_df = pd.read_csv(METADATA_FNAME)
     manuallabel_subset_df = metadata_df  # placeholder for subsetting
@@ -81,6 +83,7 @@ if __name__ == '__main__':
     totcount_of_frames_processed_thisproc = 0
     already_done = 0
     errors_thisprocessor = [] # storage
+    local_count = -1
     for local_count, idx in enumerate(local_mastercsv_idx_split):
         if local_count>1:
             proc_elapsed_min = (datetime.now()-proc_time0).total_seconds()/60.
@@ -92,7 +95,7 @@ if __name__ == '__main__':
         vid_fname = metadata_df['FILENAME'].values[idx]
         local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
-        if 'GPT_video_summaries/'+local_vid_fpath + '.txt' in already_summarized_videos:
+        if 'GPT_video_summaries/'+vid_fname + '.txt' in already_summarized_videos:
             already_done += 1
             continue
 
@@ -108,7 +111,7 @@ if __name__ == '__main__':
             with open('pres_ad_whisptranscripts_txt/' + vid_fname +'.txt', "r") as text_file:
                 TRANSCRIPT = text_file.read()
 
-            if pd.isnull(TRANSCRIPT):
+            if not TRANSCRIPT.strip():
                 TRANSCRIPT = 'null, as no words are spoken in the ad'
 
         except Exception as e:
@@ -119,7 +122,7 @@ if __name__ == '__main__':
 
         FRAMETIMES_SEGMENTS = []
         FRAMEDESCRIPTIONS_SEGMENTS = []
-        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_speechcentered/'+vid_fname.split('.')[0] + '*'):
+        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_speechcentered/'+vid_fname.split('.')[0] + '_*'):
             frametime = float( this_framedescription_fpath.split('_')[-1].split('.')[0] )
             FRAMETIMES_SEGMENTS.append(frametime)
             with open(this_framedescription_fpath, 'r') as tmp:
@@ -128,7 +131,7 @@ if __name__ == '__main__':
 
         FRAMETIMES_REGSPACED = []
         FRAMEDESCRIPTIONS_REGSPACED = []
-        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_regintervals/'+vid_fname.split('.')[0] + '*'):
+        for this_framedescription_fpath in glob.glob('GPT_frame_descriptions_regintervals/'+vid_fname + '_*'):
             frametime = float( this_framedescription_fpath.split('_')[-1].split('.')[0] )
             FRAMETIMES_REGSPACED.append(frametime)
             with open(this_framedescription_fpath, 'r') as tmp:
@@ -155,13 +158,13 @@ if __name__ == '__main__':
 
         except Exception as e:
             print('\nError on', vid_fname, e)
-            local_errors.append(e, rank, local_vid_fpath)
+            local_errors.append((str(e), rank, local_vid_fpath))
             pass
 
     print(local_errors)
-    print('rank', rank, 'attempted to describe a total of', 
+    print('transcript read errors:', errors_thisprocessor)
+    print('rank', rank, 'attempted to describe a total of',
         local_count+1, 'videos. Already done =', already_done)
-
 
 
 

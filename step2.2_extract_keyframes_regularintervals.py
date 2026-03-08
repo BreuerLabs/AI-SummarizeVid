@@ -17,6 +17,7 @@ This script saves a still frame at evenly time-spaced intervals from each ad vid
 
 
 METADATA_FNAME = 'METADATA.csv'
+MAX_FRAME_TIME_MS = 300000  # 5 minutes
 
 
 if __name__ == '__main__':
@@ -26,9 +27,10 @@ if __name__ == '__main__':
 
     # Create keyframe storage directory if they don't already exist:
     if rank == 0:
-        if not os.path.exists("keyframes_regintervals"): 
-            os.makedirs("keyframes_regintervals") 
+        if not os.path.exists("keyframes_regintervals"):
+            os.makedirs("keyframes_regintervals")
 
+    comm.Barrier()  # Ensure rank 0 finishes creating directories before all ranks proceed
 
     proc_time0 = datetime.now()
     local_errors = []
@@ -49,13 +51,19 @@ if __name__ == '__main__':
         local_vid_fpath = 'PRES_AD_VIDEOS/' + vid_fname
 
         try:
-            # Take frames at 3sec intervals until video end is reached:
-            for frame_sample_time in range(3000, 180000, 3000):
+            # Take frames at 3s intervals with a hard 5-minute cap.
+            # This intentionally causes ffmpeg "past end" warnings for shorter videos; those warnings are expected.
+            for frame_sample_time in range(3000, MAX_FRAME_TIME_MS + 1, 3000):
                 image_output_fpath = 'keyframes_regintervals/' + vid_fname + "_" + str(frame_sample_time) + ".jpg"
                 # print('\n\n', local_vid_fname + "_" + str(frame_sample_time) + ".jpg")
                 # ffmpeg -ss 12 -i P-1026-41628.mp4 -frames:v 1 testframe.jpg
-                subprocess.run(['ffmpeg', '-ss', str(frame_sample_time/1000.),  '-i',  local_vid_fpath, 
-                    '-frames:v', '1', image_output_fpath, '-y', '-hide_banner', '-loglevel', 'warning'] )
+                result = subprocess.run(['ffmpeg', '-ss', str(frame_sample_time/1000.),  '-i',  local_vid_fpath,
+                    '-frames:v', '1', image_output_fpath, '-y', '-hide_banner', '-loglevel', 'warning'])
+                if result.returncode != 0:
+                    print('WARNING: ffmpeg non-zero exit', result.returncode, 'for', image_output_fpath, '(may be past end of video)')
+                    local_errors.append([rank, result.returncode, image_output_fpath])
+                if frame_sample_time == MAX_FRAME_TIME_MS and os.path.isfile(image_output_fpath) and os.path.getsize(image_output_fpath) > 0:
+                    print('ERROR: saved final capped frame at 5:00 for', vid_fname, '- video may extend beyond hardcoded extraction window.')
 
         except Exception as e:
             print('ERROR:', e, 'processor', rank, local_vid_fpath)
@@ -64,5 +72,4 @@ if __name__ == '__main__':
 
     if len(local_errors):
         print(local_errors)
-
 

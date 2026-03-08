@@ -30,8 +30,10 @@ if __name__ == '__main__':
 
     # Create keyframe storage directory if they don't already exist:
     if rank == 0:
-        if not os.path.exists("keyframes_speechcentered"): 
-            os.makedirs("keyframes_speechcentered") 
+        if not os.path.exists("keyframes_speechcentered"):
+            os.makedirs("keyframes_speechcentered")
+
+    comm.Barrier()  # Ensure rank 0 finishes creating directories before all ranks proceed
 
     metadata_df = pd.read_csv(METADATA_FNAME)
 
@@ -63,7 +65,7 @@ if __name__ == '__main__':
                 # print('saving:  ' + image_output_fpath)
                 subprocess.run(['ffmpeg', '-ss', str(frame_sample_time/1000.),  '-i',  local_vid_fpath, '-frames:v', '1', image_output_fpath, '-y'] )
 
-        except:
-            print('ERROR-opening '+ 'pres_ad_whisptranscripts_tsv/' + vid_fname+'.tsv')
+        except Exception as e:
+            print('ERROR processing '+ vid_fname, e)
 
 
