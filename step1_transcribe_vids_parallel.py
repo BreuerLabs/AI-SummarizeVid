@@ -23,6 +23,66 @@ options = {
     'highlight_words': False
 }
 
+
+def get_video_duration_ms(video_path: str) -> int:
+    """Return video duration in milliseconds from ffprobe."""
+    out = subprocess.check_output(
+        [
+            "ffprobe",
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=nw=1:nk=1",
+            video_path,
+        ],
+        text=True,
+    ).strip()
+    return int(float(out) * 1000.0)
+
+
+def trim_transcription_to_duration(
+    transcription: dict,
+    duration_ms: int,
+    start_pad_ms: int = 250,
+    end_pad_ms: int = 1500,
+) -> tuple[dict, int]:
+    """
+    Drop/trim Whisper segments that run beyond true video duration.
+    Returns (updated_transcription, dropped_segment_count).
+    """
+    segments = transcription.get("segments", [])
+    kept_segments = []
+    dropped = 0
+    start_limit_ms = duration_ms + start_pad_ms
+    end_drop_limit_ms = duration_ms + end_pad_ms
+
+    for seg in segments:
+        start_ms = int(float(seg.get("start", 0.0)) * 1000.0)
+        end_ms = int(float(seg.get("end", 0.0)) * 1000.0)
+
+        # Drop segments that clearly start after the video ends.
+        if start_ms > start_limit_ms:
+            dropped += 1
+            continue
+
+        # Also drop segments that run far past the end (hallucinated tails).
+        if end_ms > end_drop_limit_ms:
+            dropped += 1
+            continue
+
+        # Keep borderline segments but clamp their end to true duration.
+        if end_ms > duration_ms:
+            seg["end"] = duration_ms / 1000.0
+        kept_segments.append(seg)
+
+    transcription["segments"] = kept_segments
+    transcription["text"] = " ".join(
+        str(seg.get("text", "")).strip() for seg in kept_segments if str(seg.get("text", "")).strip()
+    ).strip()
+    return transcription, dropped
+
 if __name__ == '__main__':
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
@@ -61,7 +121,12 @@ if __name__ == '__main__':
         vid_fpath = 'PRES_AD_VIDEOS/' + vid_fpath_id 
 
         try:
+            duration_ms = get_video_duration_ms(vid_fpath)
             transcription = whispermodel.transcribe(vid_fpath, fp16=False)
+            transcription, n_dropped = trim_transcription_to_duration(transcription, duration_ms=duration_ms)
+            if n_dropped:
+                print('Trimmed', n_dropped, 'hallucinated tail segments from', vid_fpath_id)
+
             with open('pres_ad_whisptranscripts_txt/' + vid_fpath_id +'.txt', "w") as text_file:
                 text_file.write(transcription['text'])
 
@@ -88,7 +153,7 @@ if __name__ == '__main__':
         elapsed = (datetime.now()-time_start).total_seconds()
         print('\n\nRank', rank, 'Completed', vid_count, 'of', len(this_proc_left_to_do),\
                 'elapsed:', elapsed//60, 'minutes','remaining time:', \
-                    (elapsed/vid_count)*(len(this_proc_left_to_do) - vid_count)/60., 'minutes',
+                    (elapsed/max(vid_count,1))*(len(this_proc_left_to_do) - vid_count)/60., 'minutes',
                 'ERRORS:', error_files_thisproc, 'num errors', len(error_files_thisproc),'ErrorMessages', error_msgs_thisproc)
         
     error_messages = comm.gather(error_msgs_thisproc, root=0)
@@ -97,4 +162,3 @@ if __name__ == '__main__':
     if rank == 0:
         print('\n\nerror messages:', error_messages)
         print('\n\nerror files:', error_files)
-
